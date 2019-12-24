@@ -26,20 +26,20 @@ conv_class <- function(x, delta = 0.05,
 
 # Simulated data
 ## Settings
-Nt <- 20                    # time span
-Nq <- 10                    # number of quadrats
+Nt <- 15                    # time span
+Nq <- 10                     # number of quadrats
 cut_points <- c(0.01, 0.1, 0.25, 0.5, 0.75) # cut points
 theta <- rep(NA, Nt)        # temporal change in the site
 r <- rep(NA, Nq)            # spatial change in the site
 cover <- matrix(NA, Nt, Nq) # matrix to store cover proportion data
 cls <- matrix(NA, Nt, Nq)   # matrix to store cover class data
-sd <- c(0.5, 0.5)           # SDs for tempral and spatial changes, respecitively
+sd <- c(0.5, 0.5)           # SDs for spatial and temporal changes, respecitively
 delta <- 0.05               # uncertainty in classification
 
 ## Data generation
 ### temporal change
 set.seed(1)
-theta[1] <- -8
+theta[1] <- -6
 for (t in 2:Nt) {
   theta[t] <- rnorm(1, theta[t - 1] + 0.3, sd[1])
 }
@@ -84,10 +84,10 @@ if (!file.exists(results_file) |
     (file.mtime(model_file) > file.mtime(results_file))) {
   model <- cmdstan_model(model_file)
   fit_sim <- model$sample(data = stan_data,
-                          seed = 1, refresh = 1000, init = inits,
+                          seed = 1, refresh = 200, init = inits,
                           num_chains = 4, num_cores = 4,
-                          num_samples = 8000, num_warmup = 4000, thin = 1,
-                          adapt_delta = 0.9)
+                          num_samples = 1000, num_warmup = 1000, thin = 1,
+                          adapt_delta = 0.85, max_depth = 20)
   ###  Diagnose
   fit_sim$cmdstan_diagnose()
   
@@ -112,7 +112,7 @@ phi.median <- apply(phi, 2, median)
 phi.ci <- apply(phi, 2, quantile, probs = c(0.025, 0.975))
 ggplot(data.frame(Time = 1:Nt,
                   Cover = apply(cover, 1, mean))) +
-  geom_line(aes(x = Time, y = Cover)) +
+  geom_line(aes(x = Time, y = Cover), size = 1) +
   geom_jitter(data = data.frame(Time = rep(1:Nt, Nq),
                                 Cover = class_median[c(cls)]),
               aes(x = Time, y = Cover),
@@ -120,7 +120,7 @@ ggplot(data.frame(Time = 1:Nt,
               color = "black", alpha = 0.6) +
   geom_line(data = data.frame(Time = 1:Nt,
                               Cover = phi.median),
-            aes(x = Time, y = Cover), colour = "red") +
+            aes(x = Time, y = Cover), size = 1, colour = "red") +
   geom_ribbon(data = data.frame(Time = 1:Nt,
                                 Cover_lower = phi.ci[1, ],
                                 Cover_upper = phi.ci[2, ]),
@@ -131,6 +131,7 @@ ggsave("sim.pdf", device = "pdf", width = 12, height = 9, units = "cm")
 
 
 # Real data
+
 ## Read data
 data_file <- "Table S1.txt"
 data <- read_tsv(data_file) %>%
@@ -178,16 +179,26 @@ stan_data <- list(N_q = n_q,
                   CP = cut_points,
                   Y = y)
 
+## CmdStanR settings
+cmdstanpath <- "/usr/local/cmdstan"
+set_cmdstan_path(cmdstanpath)
+Sys.setenv(PATH = "/usr/bin:/bin")
+
+## Initial values
+inits <- c("init2_1.R", "init2_2.R", "init2_3.R", "init2_4.R")
+
+## Compile and fitting
 model_file <- "ssmcover.stan"
 results_file <- "ss27.RData"
+
 if (!file.exists(results_file) |
     (file.mtime(model_file) > file.mtime(results_file))) {
   model <- cmdstan_model(model_file)
   fit_ss27 <- model$sample(data = stan_data,
                            seed = 1, refresh = 200, init = inits,
                            num_chains = 4, num_cores = 4,
-                           num_samples = 1000, num_warmup = 1000, thin = 1,
-                           adapt_delta = 0.9)
+                           num_samples = 2000, num_warmup = 2000, thin = 1,
+                           adapt_delta = 0.85, max_depth = 20)
   ###  Diagnose
   fit_ss27$cmdstan_diagnose()
   
@@ -203,7 +214,7 @@ print(stanfit_ss27, pars = c("delta", "sigma"))
 print(stanfit_ss27, pars = "phi")
 
 ## Traceplot
-rstan::traceplot(stanfit_ss27, pars = "sigma")
+rstan::traceplot(stanfit_ss27, pars = c("delta", "sigma"))
 
 ## View simulated data and posterior median and 95% CI
 class_median <- c(cut_points, 1) / 2 + c(0, cut_points) / 2

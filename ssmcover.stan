@@ -45,25 +45,44 @@ data {
 }
 
 parameters {
-  vector[N_y] theta;                        // Latent state
-  matrix[N_obs, N_q] r;                     // Spatial random effect
-  real<lower = 0, upper = 1> delta;         // Uncertainty in classification
-  real<lower = 0> sigma[2];                 // Standard deviations of
-                                            //   spatial random effect: sigma[1]
-                                            //   and temporal variation: sigma[2]
+  matrix[N_obs, N_q] r_raw;          // Spatial random effect (reparameterized)
+  vector[N_y] theta_raw;             // Latent state (reparameterized)
+  real<lower = 0, upper = 1> delta;  // Uncertainty in classification
+  real<lower = 0> sigma[2];          // Standard deviations of
+                                     //   spatial random effect: sigma[1]
+                                     //   and temporal variation: sigma[2]
+}
+
+transformed parameters {
+  matrix[N_obs, N_q] r;              // Spatial random effect
+  vector[N_y] theta;                 // Latent state
+  
+  // System model (reparameterized)
+  // Spatial random effect
+  for (i in 1:N_obs) {
+    r[i, 1] = r_raw[i, 1];
+    for (q in 2:N_q) {
+      r[i, q] = r[i, q - 1] + r_raw[i, q] * sigma[1];
+    }
+    r[i] = r[i] - mean(r[i]);
+  }
+
+  // Logit of cover proportion
+  theta[1:2] = theta_raw[1:2];
+  for (t in 3:N_y)
+    theta[t] = 2 * theta[t - 1] - theta[t - 2] + theta_raw[t] * sigma[2];
 }
 
 model {
-  // Spatial random effect
+  // Variation in spatial random effect
   for (i in 1:N_obs) {
-    r[i, 1:(N_q - 1)] ~ normal(r[i, 2:N_q], sigma[1]);
-    r[i, N_q] ~ normal(-sum(r[i, 1:(N_q - 1)]), sigma[1]);
+    r_raw[i, 1] ~ normal(0, 5);     // Prior
+    r_raw[i, 2:N_q] ~ std_normal();
   }
 
-  // System model
-  // Logit of coverage proportion
-  theta[3:N_y] ~ normal(2 * theta[2:(N_y - 1)]
-                          - theta[1:(N_y - 2)], sigma[2]);
+  // Variation in system model
+  theta_raw[1:2] ~ normal(0, 5);    // Prior
+  theta_raw[3:N_y] ~ std_normal();
 
   // Observation model
   for (i in 1:N_obs) {
@@ -72,13 +91,12 @@ model {
         real p = inv_logit(theta[y] + r[i, q]);
         real alpha = p / delta - p;
         real beta = (1 - p) * (1 - delta) / delta;
-        
+
         Y[i, q] ~ coverclass(CP, alpha, beta);
     }
   }
 
   // Weakly informative priors
-  theta[1:2] ~ normal(0, 5);
   sigma ~ normal(0, 2.5);
 }
 
