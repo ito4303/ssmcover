@@ -59,6 +59,19 @@ for (t in 1:Nt) {
   }
 }
 
+## View data
+df <- data.frame(Cover = factor(c(cls)),
+                 Time = rep(1:Nt, Nq),
+                 Quadrat = rep(1:Nq, each = Nt))
+ggplot(df) +
+  geom_tile(aes(x = Time, y = Quadrat, fill = Cover)) +
+  scale_fill_discrete(h = c(0, 180) + 15) +
+  scale_x_continuous(breaks = seq(0, 15, 5), minor_breaks = NULL) +
+  scale_y_continuous(breaks = c(1, 5, 10), minor_breaks = NULL) +
+  coord_fixed() +
+  theme_bw(base_family = "Helvetica", base_size = 10)
+ggsave("sim_data.pdf", device = "pdf", width = 12, height = 8, units = "cm")
+
 ## Bind data
 stan_data <- list(N_q = Nq,
                   N_y = Nt,
@@ -157,8 +170,6 @@ yrs <- filter(data, Belt == 27) %>%
   as.integer()
 
 ## Use Sasa senanensis in shrub layer of belt 27
-
-# Belt 27, shrub, Sasa senanensis
 ss27 <- data %>%
   dplyr::filter(Belt == 27 & Layer == "shrub" &
                 Scientific_name == "Sasa senanensis")
@@ -167,6 +178,18 @@ for (i in seq_len(nrow(ss27))) {
   d <- ss27[i, ]
   y[match(d$Year, yrs), d$Quadrat] <- d$Cov2
 }
+
+## View data
+df <- data.frame(Cover = factor(c(y)),
+                 Year = rep(yrs, n_q),
+                 Quadrat = rep(1:n_q, each = length(yrs)))
+ggplot(df) +
+  geom_tile(aes(x = Year, y = Quadrat, fill = Cover)) +
+  scale_y_continuous(breaks = c(1, 5, 10, 15, 19), minor_breaks = NULL) +
+  scale_fill_discrete(h = c(180, 0) + 15) +
+  coord_fixed() +
+  theme_bw(base_family = "Helvetica", base_size = 10)
+ggsave("ss27_data.pdf", device = "pdf", width = 15, height = 7.5, units = "cm")
 
 ## Fitting using Stan
 cut_points <- c(0.01, 0.1, 0.25, 0.5, 0.75)
