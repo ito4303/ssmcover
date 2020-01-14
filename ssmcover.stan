@@ -32,6 +32,30 @@ functions {
     }
     return bernoulli_lpmf(1 | gamma);
   }
+
+ /*
+  * Return the cover class randomly given the cut points CP,
+  * number of classes, and the beta distribution parameters
+  * a and b
+  *
+  * @param CP    Cut points (vector)
+  * @param n_cls Number of classes (int)
+  * @param a     Parameteer of the beta distribution (real)
+  * @param b     Parameteer of the beta distribution (real)
+  *
+  * @return Log probability that Y is observed
+  */
+  int coverclass_rng(vector CP, int n_cls, real a, real b) {
+    vector[n_cls] pr;
+    int y;
+    
+    pr[1] = inc_beta(a, b, CP[1]);
+    for (i in 2:(n_cls - 1))
+      pr[i] = inc_beta(a, b, CP[i]) - inc_beta(a, b, CP[i - 1]);
+    pr[n_cls] = 1 - inc_beta(a, b, CP[n_cls - 1]);
+    y = categorical_rng(pr);
+    return y;
+  }
 }
 
 data {
@@ -102,4 +126,16 @@ model {
 
 generated quantities {
   vector[N_y] phi = inv_logit(theta);
+  int yrep[N_obs, N_q];
+
+  for (i in 1:N_obs) {
+    int y = Obs_y[i];
+    for (q in 1:N_q) {
+      real p = inv_logit(theta[y] + r[i, q]);
+      real alpha = p / delta - p;
+      real beta = (1 - p) * (1 - delta) / delta;
+
+      yrep[i, q] = coverclass_rng(CP, N_cls, alpha, beta);
+    }
+  }
 }

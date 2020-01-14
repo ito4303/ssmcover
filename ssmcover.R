@@ -6,9 +6,10 @@
 library(readr)
 library(dplyr)
 library(extraDistr)
+library(ggplot2)
 library(rstan)
 library(cmdstanr)
-library(ggplot2)
+library(bayesplot)
 
 # Function to convert cover proportion to class data
 conv_class <- function(x, delta = 0.05,
@@ -117,6 +118,15 @@ print(stanfit_sim, pars = "phi")
 
 ## Traceplot
 rstan::traceplot(stanfit_sim, pars = "sigma")
+
+## Posterior predictive check
+yrep <-  extract(stanfit_sim, pars = "yrep")[["yrep"]]
+for (i in 1:15) {
+  print(pp_check(cls[i, ], yrep[ , i, ], ppc_rootogram))
+}
+pp_check(cls[15, ], yrep[ , 15, ], ppc_rootogram) +
+  ggplot2::scale_x_discrete(name = "Class", limits = as.character(1:6))
+ggsave("sim_ppc.pdf", device = "pdf", width = 12, height = 9, units = "cm")
 
 ## View simulated data and posterior median and 95% CI
 class_median <- c(cut_points, 1) / 2 + c(0, cut_points) / 2
@@ -235,6 +245,16 @@ if (!file.exists(results_file) |
 ## Summary
 print(stanfit_ss27, pars = c("delta", "sigma"))
 print(stanfit_ss27, pars = "phi")
+
+## Posterior predictive check
+y[y == 0] <- 1
+yrep <-  extract(stanfit_ss27, pars = "yrep")[["yrep"]]
+for (i in seq_along(yrs)) {
+  print(pp_check(y[i, ], yrep[ , i, ], ppc_rootogram))
+}
+pp_check(y[21, ], yrep[ , 21, ], ppc_rootogram) +
+  ggplot2::scale_x_discrete(name = "Class", limits = as.character(1:6))
+ggsave("ss27_ppc.pdf", device = "pdf", width = 12, height = 9, units = "cm")
 
 ## Traceplot
 rstan::traceplot(stanfit_ss27, pars = c("delta", "sigma"))
