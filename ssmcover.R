@@ -125,7 +125,8 @@ for (i in 1:15) {
   print(pp_check(cls[i, ], yrep[ , i, ], ppc_rootogram))
 }
 pp_check(cls[15, ], yrep[ , 15, ], ppc_rootogram) +
-  ggplot2::scale_x_discrete(name = "Class", limits = as.character(1:6))
+  ggplot2::scale_x_discrete(name = "Class", limits = as.character(1:6)) +
+  theme_classic(base_family = "Helvetica")
 ggsave("sim_ppc.pdf", device = "pdf", width = 12, height = 9, units = "cm")
 
 ## View simulated data and posterior median and 95% CI
@@ -253,7 +254,8 @@ for (i in seq_along(yrs)) {
   print(pp_check(y[i, ], yrep[ , i, ], ppc_rootogram))
 }
 pp_check(y[21, ], yrep[ , 21, ], ppc_rootogram) +
-  ggplot2::scale_x_discrete(name = "Class", limits = as.character(1:6))
+  ggplot2::scale_x_discrete(name = "Class", limits = as.character(1:6)) +
+  theme_classic(base_family = "Helvetica")
 ggsave("ss27_ppc.pdf", device = "pdf", width = 12, height = 9, units = "cm")
 
 ## Traceplot
@@ -278,5 +280,6 @@ ggplot(data.frame(Year = rep(yrs, n_q),
                                 Cover_upper = phi.ci[2, ]),
               aes(x = Time, ymin = Cover_lower, ymax = Cover_upper),
               fill = "red", alpha = 0.25) +
+  xlim(1957, 2020) +
   theme_classic()
 ggsave("ss27.pdf", device = "pdf", width = 12, height = 9, units = "cm")
