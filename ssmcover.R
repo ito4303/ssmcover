@@ -101,7 +101,7 @@ if (!file.exists(results_file) |
                           seed = 1, refresh = 200, init = inits,
                           num_chains = 4, num_cores = 4,
                           num_samples = 1000, num_warmup = 1000, thin = 1,
-                          adapt_delta = 0.85, max_depth = 20)
+                          adapt_delta = 0.9, max_depth = 20)
   ###  Diagnose
   fit_sim$cmdstan_diagnose()
   
