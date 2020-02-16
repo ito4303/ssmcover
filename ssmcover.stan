@@ -100,12 +100,12 @@ transformed parameters {
 model {
   // Variation in spatial random effect
   for (i in 1:N_obs) {
-    r_raw[i, 1] ~ normal(0, 5);     // Prior
+    r_raw[i, 1] ~ normal(0, 10);     // Prior
     r_raw[i, 2:N_q] ~ std_normal();
   }
 
   // Variation in system model
-  theta_raw[1:2] ~ normal(0, 5);    // Prior
+  theta_raw[1:2] ~ normal(0, 10);    // Prior
   theta_raw[3:N_y] ~ std_normal();
 
   // Observation model
@@ -121,7 +121,7 @@ model {
   }
 
   // Weakly informative priors
-  sigma ~ normal(0, 2.5);
+  sigma ~ normal(0, 10);
 }
 
 generated quantities {
