@@ -1,6 +1,6 @@
 # ssmcover
 This repository contains code and data for the manuscript titled
-"state-space model to estimate plant cover using visually determined class data,"
+"State-space modeling of the dynamics of temporal plant cover using visually determined class data,"
 submitted to PeerJ.
 
 ## Files
