@@ -184,6 +184,9 @@ plots <- levels(factor(data$Belt))
 species <- "Sasa senanensis"
 layer <- "shrub"
 
+# Cut points
+cut_points <- c(0.01, 0.1, 0.25, 0.5, 0.75)
+
 for (pl in plots) {
   # Number of quadrats
   n_q <- data %>%
@@ -226,8 +229,6 @@ for (pl in plots) {
          width = 15, height = 7.5, units = "cm")
 
   ## Fitting using Stan
-  cut_points <- c(0.01, 0.1, 0.25, 0.5, 0.75)
-
   stan_data <- list(N_q = n_q,
                     N_y = max(yrs) - min(yrs) + 1,
                     N_cls = length(cut_points) + 1,
@@ -247,6 +248,7 @@ for (pl in plots) {
                         seed = 1, refresh = 200, init = inits,
                         num_chains = 4, num_cores = 4,
                         num_samples = 2000, num_warmup = 2000, thin = 1,
+#                        num_samples = 10, num_warmup = 10, thin = 1, # for test-run
                         adapt_delta = 0.85, max_depth = 20)
     ###  Diagnose
     fit$cmdstan_diagnose()
