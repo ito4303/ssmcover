@@ -64,14 +64,14 @@ data {
   int<lower = 1> N_cls;                         // Number of classes
   int<lower = 1> N_obs;                         // Number of observed years
   int<lower = 1> Obs_y[N_obs];                  // Observed years
-  vector<lower = 0, upper = 1>[N_cls - 1] CP;   // Cut point
+  vector<lower = 0, upper = 1>[N_cls - 1] CP;   // Cut points
   int<lower = 0, upper = N_cls> Y[N_obs, N_q];  // Cover class data
 }
 
 parameters {
   matrix[N_obs, N_q] r_raw;          // Spatial random effect (reparameterized)
   vector[N_y] theta_raw;             // Latent state (reparameterized)
-  real<lower = 0, upper = 1> delta;  // Uncertainty in classification
+  real<lower = 0, upper = 1> delta;  // Uncertainty
   real<lower = 0> sigma[2];          // Standard deviations of
                                      //   spatial random effect: sigma[1]
                                      //   and temporal variation: sigma[2]
