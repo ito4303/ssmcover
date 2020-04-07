@@ -208,6 +208,9 @@ for (pl in plots) {
     d <- ss[i, ]
     y[match(d$Year, yrs), d$Quadrat] <- d$Cov2
   }
+  if (pl == "46") {
+    y[21, 15] <- 6 # impute the missing value from the neibors
+  }
 
   # View data
   df <- data.frame(Cover = factor(c(y)),
@@ -243,8 +246,7 @@ for (pl in plots) {
     fit <- model$sample(data = stan_data,
                         seed = 1, refresh = 200, init = inits,
                         num_chains = 4, num_cores = 4,
-#                        num_samples = 2000, num_warmup = 2000, thin = 1,
-                        num_samples = 5, num_warmup = 5, thin = 1,
+                        num_samples = 2000, num_warmup = 2000, thin = 1,
                         adapt_delta = 0.85, max_depth = 20)
     ###  Diagnose
     fit$cmdstan_diagnose()
