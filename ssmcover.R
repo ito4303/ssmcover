@@ -187,119 +187,121 @@ layer <- "shrub"
 # Cut points
 cut_points <- c(0.01, 0.1, 0.25, 0.5, 0.75)
 
-for (pl in plots) {
-  # Number of quadrats
-  n_q <- data %>%
-    dplyr::filter(Belt == as.numeric(pl)) %>%
-    dplyr::select(Quadrat) %>%
-    max()
-  # Number of years
-  yrs <- data %>%
-    dplyr::filter(Belt == as.numeric(pl)) %>%
-    dplyr::select(Year) %>%
-    unlist() %>%
-    factor() %>%
-    levels() %>%
-    as.character() %>%
-    as.integer()
+pl <- plots[1] # Choose plot
 
-  ss <- data %>%
-    dplyr::filter(Belt == as.numeric(pl) & Layer == layer &
-                    Scientific_name == species)
-  y <- matrix(0, nrow = length(yrs), n_q)
-  for (i in seq_len(nrow(ss))) {
-    d <- ss[i, ]
-    y[match(d$Year, yrs), d$Quadrat] <- d$Cov2
-  }
-  if (pl == "46") {
-    y[21, 15] <- 6 # impute the missing value from the neibors
-  }
+# Number of quadrats
+n_q <- data %>%
+  dplyr::filter(Belt == as.numeric(pl)) %>%
+  dplyr::select(Quadrat) %>%
+  max()
+# Number of years
+yrs <- data %>%
+  dplyr::filter(Belt == as.numeric(pl)) %>%
+  dplyr::select(Year) %>%
+  unlist() %>%
+  factor() %>%
+  levels() %>%
+  as.character() %>%
+  as.integer()
 
-  # View data
-  df <- data.frame(Cover = factor(c(y)),
-                   Year = rep(yrs, n_q),
-                   Quadrat = rep(1:n_q, each = length(yrs)))
-  ggplot(df) +
-    geom_tile(aes(x = Year, y = Quadrat, fill = Cover)) +
-    scale_y_continuous(breaks = c(1, 5, 10, 15, 19), minor_breaks = NULL) +
-    scale_fill_discrete(h = c(180, 0) + 15) +
-    coord_fixed() +
-    theme_bw(base_family = "Helvetica", base_size = 10)
-  ggsave(paste0("ss", pl, "_data.pdf"), device = "pdf",
-         width = 15, height = 7.5, units = "cm")
-
-  ## Fitting using Stan
-  stan_data <- list(N_q = n_q,
-                    N_y = max(yrs) - min(yrs) + 1,
-                    N_cls = length(cut_points) + 1,
-                    N_obs = length(yrs),
-                    Obs_y = yrs - min(yrs) + 1,
-                    CP = cut_points,
-                    Y = y)
-
-  ## Initial values
-  inits <- sapply(1:4, function(i) paste0("inits/init", pl, "_", i, ".R"))
-
-  ## Compile and fitting
-  results_file <- paste0("ss", pl, ".RData")
-  if (!file.exists(results_file) |
-      (file.mtime(model_file) > file.mtime(results_file))) {
-    fit <- model$sample(data = stan_data,
-                        seed = 1, refresh = 200, init = inits,
-                        num_chains = 4, num_cores = 4,
-                        num_samples = 2000, num_warmup = 2000, thin = 1,
-#                        num_samples = 10, num_warmup = 10, thin = 1, # for test-run
-                        adapt_delta = 0.85, max_depth = 20)
-    ###  Diagnose
-    fit$cmdstan_diagnose()
-  
-    ### Convert to stanfit object
-    stanfit_ss <- rstan::read_stan_csv(fit$output_files())
-    save(stanfit_ss, file = results_file)
-  } else {
-    load(results_file)
-  }
-
-  ## Summary
-  print(stanfit_ss, pars = c("delta", "sigma"))
-  print(stanfit_ss, pars = "phi")
-
-  ## Posterior predictive check
-  y[y == 0] <- 1
-  yrep <-  extract(stanfit_ss, pars = "yrep")[["yrep"]]
-  for (i in seq_along(yrs)) {
-    print(pp_check(y[i, ], yrep[ , i, ], ppc_rootogram))
-  }
-  pp_check(y[21, ], yrep[ , 21, ], ppc_rootogram) +
-    ggplot2::scale_x_discrete(name = "Class", limits = as.character(1:6)) +
-    theme_classic(base_family = "Helvetica")
-  ggsave(paste0("ss", pl, "_ppc.pdf"), device = "pdf",
-         width = 12, height = 9, units = "cm")
-
-  ## Traceplot
-  rstan::traceplot(stanfit_ss, pars = c("delta", "sigma"))
-
-  ## View simulated data and posterior median and 95% CI
-  class_median <- c(cut_points, 1) / 2 + c(0, cut_points) / 2
-  class_median <- c(0, class_median) # include zero
-  phi <- rstan::extract(stanfit_ss, pars = "phi")[[1]]
-  phi.median <- apply(phi, 2, median)
-  phi.ci <- apply(phi, 2, quantile, probs = c(0.025, 0.975))
-  ggplot(data.frame(Year = rep(yrs, n_q),
-                    Cover = class_median[c(y + 1)])) +
-    geom_jitter(aes(x = Year, y = Cover),
-                width = 0, height = 0.01,
-                color = "black", alpha = 0.6) +
-    geom_line(data = data.frame(Time = min(yrs):max(yrs),
-                                Cover = phi.median),
-              aes(x = Time, y = Cover), size = 1, colour = "red") +
-    geom_ribbon(data = data.frame(Time = min(yrs):max(yrs),
-                                  Cover_lower = phi.ci[1, ],
-                                  Cover_upper = phi.ci[2, ]),
-                aes(x = Time, ymin = Cover_lower, ymax = Cover_upper),
-                fill = "red", alpha = 0.25) +
-    xlim(1957, 2020) +
-    theme_classic()
-  ggsave(paste0("ss", pl, ".pdf"), device = "pdf", width = 12, height = 9, units = "cm")
+ss <- data %>%
+  dplyr::filter(Belt == as.numeric(pl) & Layer == layer &
+                  Scientific_name == species)
+y <- matrix(0, nrow = length(yrs), n_q)
+for (i in seq_len(nrow(ss))) {
+  d <- ss[i, ]
+  y[match(d$Year, yrs), d$Quadrat] <- d$Cov2
 }
+
+# View data
+df <- data.frame(Cover = factor(c(y)),
+                 Year = rep(yrs, n_q),
+                 Quadrat = rep(1:n_q, each = length(yrs)))
+ggplot(df) +
+  geom_tile(aes(x = Year, y = Quadrat, fill = Cover)) +
+  scale_y_continuous(breaks = c(1, 5, 10, 15, 20, 25),
+                     minor_breaks = NULL) +
+  scale_fill_discrete(h = c(180, 0) + 15) +
+  coord_fixed() +
+  theme_bw(base_family = "Helvetica", base_size = 10)
+ggsave(paste0("ss", pl, "_data.pdf"), device = "pdf",
+       width = 15, height = 7.5, units = "cm")
+
+## Fitting using Stan
+stan_data <- list(N_q = n_q,
+                  N_y = max(yrs) - min(yrs) + 1,
+                  N_cls = length(cut_points) + 1,
+                  N_obs = length(yrs),
+                  Obs_y = yrs - min(yrs) + 1,
+                  CP = cut_points,
+                  Y = y)
+
+## Initial values
+inits <- sapply(1:4, function(i) paste0("inits/init", pl, "_", i, ".R"))
+
+## Compile and fitting
+results_file <- paste0("ss", pl, ".RData")
+if (!file.exists(results_file) |
+    (file.mtime(model_file) > file.mtime(results_file))) {
+  fit <- model$sample(data = stan_data,
+                      seed = 1, init = inits,
+                      num_chains = 4, num_cores = 4,
+                      refresh = 200, 
+                      num_samples = 2000, num_warmup = 2000, thin = 1,
+#                      refresh = 1,  # for test-run
+#                      num_samples = 20, num_warmup = 20, thin = 1,
+                      adapt_delta = 0.85, max_depth = 20)
+  ###  Diagnose
+  fit$cmdstan_diagnose()
+  
+  ### Convert to stanfit object
+  stanfit_ss <- rstan::read_stan_csv(fit$output_files())
+  save(stanfit_ss, file = results_file)
+} else {
+  load(results_file)
+}
+
+## Summary
+print(stanfit_ss, pars = c("delta", "sigma"))
+print(stanfit_ss, pars = "phi")
+
+## Posterior predictive check
+y[y == 0] <- 1
+yrep <-  extract(stanfit_ss, pars = "yrep")[["yrep"]]
+for (i in seq_along(yrs)) {
+  print(pp_check(y[i, ], yrep[ , i, ], ppc_rootogram))
+}
+pp_check(y[21, ], yrep[ , 21, ], ppc_rootogram) +
+  ggplot2::scale_x_discrete(name = "Class", limits = as.character(1:6)) +
+  theme_classic(base_family = "Helvetica") +
+  theme(legend.position = "none")
+ggsave(paste0("ss", pl, "_ppc.pdf"), device = "pdf",
+       width = 12, height = 9, units = "cm")
+
+## Traceplot
+rstan::traceplot(stanfit_ss, pars = c("delta", "sigma"))
+
+## View simulated data and posterior median and 95% CI
+class_median <- c(cut_points, 1) / 2 + c(0, cut_points) / 2
+class_median <- c(0, class_median) # include zero
+phi <- rstan::extract(stanfit_ss, pars = "phi")[[1]]
+phi.median <- apply(phi, 2, median)
+phi.ci <- apply(phi, 2, quantile, probs = c(0.025, 0.975))
+ggplot(data.frame(Year = rep(yrs, n_q),
+                  Cover = class_median[c(y + 1)])) +
+  geom_jitter(aes(x = Year, y = Cover),
+              width = 0, height = 0.01,
+              color = "black", alpha = 0.6) +
+  geom_line(data = data.frame(Time = min(yrs):max(yrs),
+                              Cover = phi.median),
+            aes(x = Time, y = Cover), size = 1, colour = "red") +
+  geom_ribbon(data = data.frame(Time = min(yrs):max(yrs),
+                                Cover_lower = phi.ci[1, ],
+                                Cover_upper = phi.ci[2, ]),
+              aes(x = Time, ymin = Cover_lower, ymax = Cover_upper),
+              fill = "red", alpha = 0.25) +
+  xlim(1957, 2020) +
+  theme_classic()
+ggsave(paste0("ss", pl, ".pdf"), device = "pdf", width = 12, height = 9, units = "cm")
+
 
