@@ -71,7 +71,7 @@ data {
 parameters {
   matrix[N_obs, N_q] r_raw;          // Spatial random effect (reparameterized)
   vector[N_y] theta_raw;             // Latent state (reparameterized)
-  real<lower = 0, upper = 1> delta;  // Uncertainty
+  real<lower = 0, upper = 1> delta;  // Uncertainty or intra-quadrat corr.
   real<lower = 0> sigma[2];          // Standard deviations of
                                      //   spatial random effect: sigma[1]
                                      //   and temporal variation: sigma[2]
