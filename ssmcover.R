@@ -101,8 +101,6 @@ if (!file.exists(results_file) |
     (file.mtime(model_file) > file.mtime(results_file))) {
   model <- cmdstan_model(model_file)
   
-  # Note: For chain 3 of the plot 30, setting seed=3 does not work.
-  #       setting seed=5 works.
   fit_sim <- model$sample(data = stan_data,
                           seed = 1, refresh = 200, init = inits,
                           num_chains = 4, num_cores = 4,
@@ -246,6 +244,8 @@ inits <- sapply(1:4, function(i) paste0("inits/init", pl, "_", i, ".R"))
 results_file <- paste0("ss", pl, ".RData")
 if (!file.exists(results_file) |
     (file.mtime(model_file) > file.mtime(results_file))) {
+  # Note: For chain 3 of the plot 30, setting seed=3 does not work.
+  #       setting seed=5 works.
   fit <- model$sample(data = stan_data,
                       seed = 1, init = inits,
                       num_chains = 4, num_cores = 4,
