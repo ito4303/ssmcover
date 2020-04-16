@@ -71,7 +71,7 @@ data {
 parameters {
   matrix[N_obs, N_q] r_raw;          // Spatial random effect (reparameterized)
   vector[N_y] theta_raw;             // Latent state (reparameterized)
-  real<lower = 0, upper = 1> delta;  // Uncertainty
+  real<lower = 0, upper = 1> delta;  // Uncertainty or intra-quadrat corr.
   real<lower = 0> sigma[2];          // Standard deviations of
                                      //   spatial random effect: sigma[1]
                                      //   and temporal variation: sigma[2]
@@ -100,12 +100,12 @@ transformed parameters {
 model {
   // Variation in spatial random effect
   for (i in 1:N_obs) {
-    r_raw[i, 1] ~ normal(0, 10);     // Prior
+    r_raw[i, 1] ~ normal(0, 2.5);     // Prior
     r_raw[i, 2:N_q] ~ std_normal();
   }
 
   // Variation in system model
-  theta_raw[1:2] ~ normal(0, 10);    // Prior
+  theta_raw[1:2] ~ normal(0, 2.5);    // Prior
   theta_raw[3:N_y] ~ std_normal();
 
   // Observation model
@@ -121,7 +121,7 @@ model {
   }
 
   // Weakly informative priors
-  sigma ~ normal(0, 10);
+  sigma ~ normal(0, 2.5);
 }
 
 generated quantities {

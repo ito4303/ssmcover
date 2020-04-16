@@ -90,7 +90,8 @@ set_cmdstan_path(cmdstanpath)
 Sys.setenv(PATH = "/usr/bin:/bin")
 
 ## Initial values
-inits <- c("init_1.R", "init_2.R", "init_3.R", "init_4.R")
+inits <- c("inits/init_1.R", "inits/init_2.R",
+           "inits/init_3.R", "inits/init_4.R")
 
 ## Compile and fitting
 model_file <- "ssmcover.stan"
@@ -99,6 +100,9 @@ results_file <- "sim.RData"
 if (!file.exists(results_file) |
     (file.mtime(model_file) > file.mtime(results_file))) {
   model <- cmdstan_model(model_file)
+  
+  # Note: For chain 3 of the plot 30, setting seed=3 does not work.
+  #       setting seed=5 works.
   fit_sim <- model$sample(data = stan_data,
                           seed = 1, refresh = 200, init = inits,
                           num_chains = 4, num_cores = 4,
@@ -158,6 +162,13 @@ ggsave("sim.pdf", device = "pdf", width = 12, height = 9, units = "cm")
 
 # Real data
 
+## CmdStanR settings
+cmdstanpath <- "/usr/local/cmdstan"
+set_cmdstan_path(cmdstanpath)
+Sys.setenv(PATH = "/usr/bin:/bin")
+model_file <- "ssmcover.stan"
+model <- cmdstan_model(model_file)
+
 ## Read data
 data_file <- "Table S1.txt"
 data <- read_tsv(data_file) %>%
@@ -169,44 +180,57 @@ data <- read_tsv(data_file) %>%
     Cover == "4" ~ 5,
     Cover == "5" ~ 6))
 
-## Belt 27
-### Number of quadrats
-n_q <- filter(data, Belt == 27) %>%
-  select(Quadrat) %>%
+## Plots (Belt No.)
+plots <- levels(factor(data$Belt))
+
+# Species and layer
+species <- "Sasa senanensis"
+layer <- "shrub"
+
+# Cut points
+cut_points <- c(0.01, 0.1, 0.25, 0.5, 0.75)
+
+pl <- plots[1] # Choose plot
+
+# Number of quadrats
+n_q <- data %>%
+  dplyr::filter(Belt == as.numeric(pl)) %>%
+  dplyr::select(Quadrat) %>%
   max()
-yrs <- filter(data, Belt == 27) %>%
-  select(Year) %>%
+# Number of years
+yrs <- data %>%
+  dplyr::filter(Belt == as.numeric(pl)) %>%
+  dplyr::select(Year) %>%
   unlist() %>%
   factor() %>%
   levels() %>%
   as.character() %>%
   as.integer()
 
-## Sasa senanensis in shrub layer of belt 27
-ss27 <- data %>%
-  dplyr::filter(Belt == 27 & Layer == "shrub" &
-                Scientific_name == "Sasa senanensis")
+ss <- data %>%
+  dplyr::filter(Belt == as.numeric(pl) & Layer == layer &
+                  Scientific_name == species)
 y <- matrix(0, nrow = length(yrs), n_q)
-for (i in seq_len(nrow(ss27))) {
-  d <- ss27[i, ]
+for (i in seq_len(nrow(ss))) {
+  d <- ss[i, ]
   y[match(d$Year, yrs), d$Quadrat] <- d$Cov2
 }
 
-## View data
+# View data
 df <- data.frame(Cover = factor(c(y)),
                  Year = rep(yrs, n_q),
                  Quadrat = rep(1:n_q, each = length(yrs)))
 ggplot(df) +
   geom_tile(aes(x = Year, y = Quadrat, fill = Cover)) +
-  scale_y_continuous(breaks = c(1, 5, 10, 15, 19), minor_breaks = NULL) +
+  scale_y_continuous(breaks = c(1, 5, 10, 15, 20, 25),
+                     minor_breaks = NULL) +
   scale_fill_discrete(h = c(180, 0) + 15) +
   coord_fixed() +
   theme_bw(base_family = "Helvetica", base_size = 10)
-ggsave("ss27_data.pdf", device = "pdf", width = 15, height = 7.5, units = "cm")
+ggsave(paste0("ss", pl, "_data.pdf"), device = "pdf",
+       width = 15, height = 7.5, units = "cm")
 
 ## Fitting using Stan
-cut_points <- c(0.01, 0.1, 0.25, 0.5, 0.75)
-
 stan_data <- list(N_q = n_q,
                   N_y = max(yrs) - min(yrs) + 1,
                   N_cls = length(cut_points) + 1,
@@ -215,58 +239,55 @@ stan_data <- list(N_q = n_q,
                   CP = cut_points,
                   Y = y)
 
-## CmdStanR settings
-cmdstanpath <- "/usr/local/cmdstan"
-set_cmdstan_path(cmdstanpath)
-Sys.setenv(PATH = "/usr/bin:/bin")
-
 ## Initial values
-inits <- c("init2_1.R", "init2_2.R", "init2_3.R", "init2_4.R")
+inits <- sapply(1:4, function(i) paste0("inits/init", pl, "_", i, ".R"))
 
 ## Compile and fitting
-model_file <- "ssmcover.stan"
-results_file <- "ss27.RData"
-
+results_file <- paste0("ss", pl, ".RData")
 if (!file.exists(results_file) |
     (file.mtime(model_file) > file.mtime(results_file))) {
-  model <- cmdstan_model(model_file)
-  fit_ss27 <- model$sample(data = stan_data,
-                           seed = 1, refresh = 200, init = inits,
-                           num_chains = 4, num_cores = 4,
-                           num_samples = 2000, num_warmup = 2000, thin = 1,
-                           adapt_delta = 0.85, max_depth = 20)
+  fit <- model$sample(data = stan_data,
+                      seed = 1, init = inits,
+                      num_chains = 4, num_cores = 4,
+                      refresh = 200, 
+                      num_samples = 2000, num_warmup = 2000, thin = 1,
+#                      refresh = 1,  # for test-run
+#                      num_samples = 20, num_warmup = 20, thin = 1,
+                      adapt_delta = 0.85, max_depth = 20)
   ###  Diagnose
-  fit_ss27$cmdstan_diagnose()
+  fit$cmdstan_diagnose()
   
   ### Convert to stanfit object
-  stanfit_ss27 <- rstan::read_stan_csv(fit_ss27$output_files())
-  save(stanfit_ss27, file = results_file)
+  stanfit_ss <- rstan::read_stan_csv(fit$output_files())
+  save(stanfit_ss, file = results_file)
 } else {
   load(results_file)
 }
 
 ## Summary
-print(stanfit_ss27, pars = c("delta", "sigma"))
-print(stanfit_ss27, pars = "phi")
+print(stanfit_ss, pars = c("delta", "sigma"))
+print(stanfit_ss, pars = "phi")
 
 ## Posterior predictive check
 y[y == 0] <- 1
-yrep <-  extract(stanfit_ss27, pars = "yrep")[["yrep"]]
+yrep <-  extract(stanfit_ss, pars = "yrep")[["yrep"]]
 for (i in seq_along(yrs)) {
   print(pp_check(y[i, ], yrep[ , i, ], ppc_rootogram))
 }
 pp_check(y[21, ], yrep[ , 21, ], ppc_rootogram) +
   ggplot2::scale_x_discrete(name = "Class", limits = as.character(1:6)) +
-  theme_classic(base_family = "Helvetica")
-ggsave("ss27_ppc.pdf", device = "pdf", width = 12, height = 9, units = "cm")
+  theme_classic(base_family = "Helvetica") +
+  theme(legend.position = "none")
+ggsave(paste0("ss", pl, "_ppc.pdf"), device = "pdf",
+       width = 12, height = 9, units = "cm")
 
 ## Traceplot
-rstan::traceplot(stanfit_ss27, pars = c("delta", "sigma"))
+rstan::traceplot(stanfit_ss, pars = c("delta", "sigma"))
 
 ## View simulated data and posterior median and 95% CI
 class_median <- c(cut_points, 1) / 2 + c(0, cut_points) / 2
 class_median <- c(0, class_median) # include zero
-phi <- rstan::extract(stanfit_ss27, pars = "phi")[[1]]
+phi <- rstan::extract(stanfit_ss, pars = "phi")[[1]]
 phi.median <- apply(phi, 2, median)
 phi.ci <- apply(phi, 2, quantile, probs = c(0.025, 0.975))
 ggplot(data.frame(Year = rep(yrs, n_q),
@@ -284,110 +305,6 @@ ggplot(data.frame(Year = rep(yrs, n_q),
               fill = "red", alpha = 0.25) +
   xlim(1957, 2020) +
   theme_classic()
-ggsave("ss27.pdf", device = "pdf", width = 12, height = 9, units = "cm")
+ggsave(paste0("ss", pl, ".pdf"), device = "pdf", width = 12, height = 9, units = "cm")
 
 
-## Belt 30
-### Number of quadrats
-n_q <- filter(data, Belt == 30) %>%
-  select(Quadrat) %>%
-  max()
-yrs <- filter(data, Belt == 30) %>%
-  select(Year) %>%
-  unlist() %>%
-  factor() %>%
-  levels() %>%
-  as.character() %>%
-  as.integer()
-
-## Sasa senanensis in shrub layer of belt 30
-ss30<- data %>%
-  dplyr::filter(Belt == 30 & Layer == "shrub" &
-                  Scientific_name == "Sasa senanensis")
-y <- matrix(0, nrow = length(yrs), n_q)
-for (i in seq_len(nrow(ss27))) {
-  d <- ss30[i, ]
-  y[match(d$Year, yrs), d$Quadrat] <- d$Cov2
-}
-
-## View data
-df <- data.frame(Cover = factor(c(y)),
-                 Year = rep(yrs, n_q),
-                 Quadrat = rep(1:n_q, each = length(yrs)))
-ggplot(df) +
-  geom_tile(aes(x = Year, y = Quadrat, fill = Cover)) +
-  scale_y_continuous(breaks = c(1, 5, 10, 15, 19), minor_breaks = NULL) +
-  scale_fill_discrete(h = c(180, 0) + 15) +
-  coord_fixed() +
-  theme_bw(base_family = "Helvetica", base_size = 10)
-ggsave("ss30_data.pdf", device = "pdf", width = 15, height = 7.5, units = "cm")
-
-## Fitting using Stan
-cut_points <- c(0.01, 0.1, 0.25, 0.5, 0.75)
-
-stan_data <- list(N_q = n_q,
-                  N_y = max(yrs) - min(yrs) + 1,
-                  N_cls = length(cut_points) + 1,
-                  N_obs = length(yrs),
-                  Obs_y = yrs - min(yrs) + 1,
-                  CP = cut_points,
-                  Y = y)
-
-## CmdStanR settings
-cmdstanpath <- "/usr/local/cmdstan"
-set_cmdstan_path(cmdstanpath)
-Sys.setenv(PATH = "/usr/bin:/bin")
-
-## Initial values
-inits <- c("init2_1.R", "init2_2.R", "init2_3.R", "init2_4.R")
-
-## Compile and fitting
-model_file <- "ssmcover.stan"
-results_file <- "ss30.RData"
-
-if (!file.exists(results_file) |
-    (file.mtime(model_file) > file.mtime(results_file))) {
-  model <- cmdstan_model(model_file)
-  fit_ss30 <- model$sample(data = stan_data,
-                           seed = 1, refresh = 200, init = inits,
-                           num_chains = 4, num_cores = 4,
-                           num_samples = 2000, num_warmup = 2000, thin = 1,
-                           adapt_delta = 0.85, max_depth = 20)
-  ###  Diagnose
-  fit_ss30$cmdstan_diagnose()
-  
-  ### Convert to stanfit object
-  stanfit_ss30 <- rstan::read_stan_csv(fit_ss27$output_files())
-  save(stanfit_ss30, file = results_file)
-} else {
-  load(results_file)
-}
-
-## Summary
-print(stanfit_ss30, pars = c("delta", "sigma"))
-print(stanfit_ss30, pars = "phi")
-
-## Traceplot
-rstan::traceplot(stanfit_ss30, pars = c("delta", "sigma"))
-
-## View simulated data and posterior median and 95% CI
-class_median <- c(cut_points, 1) / 2 + c(0, cut_points) / 2
-class_median <- c(0, class_median) # include zero
-phi <- rstan::extract(stanfit_ss30, pars = "phi")[[1]]
-phi.median <- apply(phi, 2, median)
-phi.ci <- apply(phi, 2, quantile, probs = c(0.025, 0.975))
-ggplot(data.frame(Year = rep(yrs, n_q),
-                  Cover = class_median[c(y + 1)])) +
-  geom_jitter(aes(x = Year, y = Cover),
-              width = 0, height = 0.01,
-              color = "black", alpha = 0.6) +
-  geom_line(data = data.frame(Time = min(yrs):max(yrs),
-                              Cover = phi.median),
-            aes(x = Time, y = Cover), size = 1, colour = "red") +
-  geom_ribbon(data = data.frame(Time = min(yrs):max(yrs),
-                                Cover_lower = phi.ci[1, ],
-                                Cover_upper = phi.ci[2, ]),
-              aes(x = Time, ymin = Cover_lower, ymax = Cover_upper),
-              fill = "red", alpha = 0.25) +
-  theme_classic()
-ggsave("ss30.pdf", device = "pdf", width = 12, height = 9, units = "cm")

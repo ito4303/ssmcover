@@ -9804,7 +9804,7 @@ Belt	Quadrat	Layer	Year	Date	Scientific_name	Japanese_name	Cover
 36	2	herb	1976	1976-08	Circaea alpina subsp. alpina	ミヤマタニタデ	+
 36	2	herb	1980	1980-09	Galium kamtschaticum var. kamtschaticum	エゾノヨツバムグラ	+
 36	2	herb	1980	1980-09	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	1
-36	2	herb	1980	1980-09	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+36	2	herb	1980	1980-09	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 36	2	herb	1984	1984-09	Solidago virgaurea subsp. asiatica	アキノキリンソウ	+
 36	2	herb	1984	1984-09	Galium kamtschaticum var. kamtschaticum	エゾノヨツバムグラ	+
 36	2	herb	1984	1984-09	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	+
@@ -9928,55 +9928,55 @@ Belt	Quadrat	Layer	Year	Date	Scientific_name	Japanese_name	Cover
 36	3	herb	1966	1966-08	Thalictrum sachalinense	エゾカラマツ	+
 36	3	herb	1966	1966-08	Galium kamtschaticum var. kamtschaticum	エゾノヨツバムグラ	+
 36	3	herb	1966	1966-08	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	3
-36	3	herb	1966	1966-08	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+36	3	herb	1966	1966-08	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 36	3	herb	1966	1966-08	Peracarpa carnosa	タニギキョウ	+
 36	3	herb	1967	1967-09	Galium kamtschaticum var. kamtschaticum	エゾノヨツバムグラ	+
 36	3	herb	1967	1967-09	Galium trifloriforme	オククルマムグラ	+
 36	3	herb	1967	1967-09	Cornus canadensis	ゴゼンタチバナ	+
 36	3	herb	1967	1967-09	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	5
-36	3	herb	1967	1967-09	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+36	3	herb	1967	1967-09	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 36	3	herb	1967	1967-09	Circaea alpina subsp. alpina	ミヤマタニタデ	+
 36	3	herb	1968	1968-08	Galium kamtschaticum var. kamtschaticum	エゾノヨツバムグラ	+
 36	3	herb	1968	1968-08	Cornus canadensis	ゴゼンタチバナ	+
 36	3	herb	1968	1968-08	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	4
-36	3	herb	1968	1968-08	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+36	3	herb	1968	1968-08	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 36	3	herb	1968	1968-08	Circaea alpina subsp. alpina	ミヤマタニタデ	+
 36	3	herb	1972	1972-08	Solidago virgaurea subsp. asiatica	アキノキリンソウ	+
 36	3	herb	1972	1972-08	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	4
-36	3	herb	1972	1972-08	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+36	3	herb	1972	1972-08	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 36	3	herb	1972	1972-08	Anemone debilis	ヒメイチゲ	+
 36	3	herb	1976	1976-08	Galium kamtschaticum var. kamtschaticum	エゾノヨツバムグラ	+
 36	3	herb	1976	1976-08	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	2
-36	3	herb	1976	1976-08	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+36	3	herb	1976	1976-08	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 36	3	herb	1976	1976-08	Maianthemum dilatatum	マイヅルソウ	+
 36	3	herb	1976	1976-08	Circaea alpina subsp. alpina	ミヤマタニタデ	+
 36	3	herb	1980	1980-09	Galium kamtschaticum var. kamtschaticum	エゾノヨツバムグラ	+
 36	3	herb	1980	1980-09	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	3
 36	3	herb	1980	1980-09	Dryopteris expansa	シラネワラビ	+
-36	3	herb	1980	1980-09	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+36	3	herb	1980	1980-09	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 36	3	herb	1984	1984-09	Galium kamtschaticum var. kamtschaticum	エゾノヨツバムグラ	+
 36	3	herb	1984	1984-09	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	2
-36	3	herb	1984	1984-09	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+36	3	herb	1984	1984-09	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 36	3	herb	1988	1989-09	Galium kamtschaticum var. kamtschaticum	エゾノヨツバムグラ	+
 36	3	herb	1988	1989-09	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	2
-36	3	herb	1988	1989-09	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+36	3	herb	1988	1989-09	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 36	3	herb	1988	1989-09	Maianthemum dilatatum	マイヅルソウ	+
 36	3	herb	1998	1998-07-22	Galium kamtschaticum var. kamtschaticum	エゾノヨツバムグラ	+
 36	3	herb	1998	1998-07-22	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	2
-36	3	herb	1998	1998-07-22	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+36	3	herb	1998	1998-07-22	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 36	3	herb	1998	1998-07-22	Maianthemum dilatatum	マイヅルソウ	+
 36	3	herb	2002	2002-07-31	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	2
 36	3	herb	2002	2002-07-31	Galium kamtschaticum var. kamtschaticum	エゾノヨツバムグラ	+
 36	3	herb	2002	2002-07-31	Maianthemum dilatatum	マイヅルソウ	+
-36	3	herb	2002	2002-07-31	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+36	3	herb	2002	2002-07-31	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 36	3	herb	2002	2002-07-31	Circaea alpina subsp. alpina	ミヤマタニタデ	+
 36	3	herb	2009	2009-07-29	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	1
 36	3	herb	2009	2009-07-29	Maianthemum dilatatum	マイヅルソウ	+
 36	3	herb	2009	2009-07-29	Calamagrostis purpurea subsp. langsdorfii	イワノガリヤス	+
-36	3	herb	2009	2009-07-29	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+36	3	herb	2009	2009-07-29	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 36	3	herb	2017	2017-08-08	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	1
 36	3	herb	2017	2017-08-08	Maianthemum dilatatum	マイヅルソウ	+
-36	3	herb	2017	2017-08-08	Streptopus streptopoides subsp. japonicus	タケシマラン	1
+36	3	herb	2017	2017-08-08	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	1
 36	3	vine	1980	1980-09	Actinidia kolomikta	ミヤママタタビ	+
 36	3	moss	1988	1989-09	Moss	コケ類	+
 36	3	moss	1998	1998-07-22	Moss	コケ類	+
@@ -10481,7 +10481,7 @@ Belt	Quadrat	Layer	Year	Date	Scientific_name	Japanese_name	Cover
 36	8	herb	1964	1964-08	Circaea alpina subsp. alpina	ミヤマタニタデ	+
 36	8	herb	1965	1965-08	Impatiens noli-tangere	キツリフネ	+
 36	8	herb	1965	1965-08	Peracarpa carnosa	タニギキョウ	+
-36	8	herb	1966	1966-08	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+36	8	herb	1966	1966-08	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 36	8	herb	1966	1966-08	Maianthemum dilatatum	マイヅルソウ	+
 36	8	herb	1966	1966-08	Circaea alpina subsp. alpina	ミヤマタニタデ	2
 36	8	herb	1967	1967-09	Calamagrostis purpurea subsp. langsdorfii	イワノガリヤス	+
@@ -10625,7 +10625,7 @@ Belt	Quadrat	Layer	Year	Date	Scientific_name	Japanese_name	Cover
 36	9	herb	1972	1972-08	Impatiens noli-tangere	キツリフネ	+
 36	9	herb	1972	1972-08	Cornus canadensis	ゴゼンタチバナ	+
 36	9	herb	1972	1972-08	Oxalis acetosella	コミヤマカタバミ	+
-36	9	herb	1972	1972-08	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+36	9	herb	1972	1972-08	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 36	9	herb	1972	1972-08	Maianthemum dilatatum	マイヅルソウ	+
 36	9	herb	1972	1972-08	Adoxa moschatellina	レンプクソウ	+
 36	9	herb	1976	1976-08	Petasites japonicus subsp. giganteus	アキタブキ	+
@@ -11366,7 +11366,7 @@ Belt	Quadrat	Layer	Year	Date	Scientific_name	Japanese_name	Cover
 46	1	herb	1976	1976-08	Oxalis acetosella	コミヤマカタバミ	+
 46	1	herb	1976	1976-08	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	+
 46	1	herb	1976	1976-08	Stellaria fenzlii	シラオイハコベ	+
-46	1	herb	1976	1976-08	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+46	1	herb	1976	1976-08	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 46	1	herb	1976	1976-08	Cirsium kamtschaticum	チシマアザミ	+
 46	1	herb	1976	1976-08	Maianthemum dilatatum	マイヅルソウ	+
 46	1	herb	1976	1976-08	Circaea alpina subsp. alpina	ミヤマタニタデ	+
@@ -11391,11 +11391,11 @@ Belt	Quadrat	Layer	Year	Date	Scientific_name	Japanese_name	Cover
 46	1	herb	2002	2002-07-29	Senecio cannabifolius	ハンゴンソウ	+
 46	1	herb	2002	2002-07-29	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	+
 46	1	herb	2009	2009-07-31	Maianthemum dilatatum	マイヅルソウ	+
-46	1	herb	2009	2009-07-31	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+46	1	herb	2009	2009-07-31	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 46	1	herb	2009	2009-07-31	Cirsium kamtschaticum	チシマアザミ	+
 46	1	herb	2017	2017-08-07	Maianthemum dilatatum	マイヅルソウ	+
 46	1	herb	2017	2017-08-07	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	+
-46	1	herb	2017	2017-08-07	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+46	1	herb	2017	2017-08-07	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 46	1	herb	2017	2017-08-07	Cirsium kamtschaticum	チシマアザミ	+
 46	1	vine	1957	1957-09	Actinidia kolomikta	ミヤママタタビ	2
 46	1	vine	1958	1958-08	Actinidia kolomikta	ミヤママタタビ	2
@@ -11498,7 +11498,7 @@ Belt	Quadrat	Layer	Year	Date	Scientific_name	Japanese_name	Cover
 46	2	herb	1959	1959-09	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	3
 46	2	herb	1960	1960-08	Cornus canadensis	ゴゼンタチバナ	+
 46	2	herb	1960	1960-08	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	+
-46	2	herb	1960	1960-08	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+46	2	herb	1960	1960-08	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 46	2	herb	1960	1960-08	Maianthemum dilatatum	マイヅルソウ	+
 46	2	herb	1961	1961-08	Galium kamtschaticum var. kamtschaticum	エゾノヨツバムグラ	+
 46	2	herb	1961	1961-08	Cornus canadensis	ゴゼンタチバナ	2
@@ -11555,7 +11555,7 @@ Belt	Quadrat	Layer	Year	Date	Scientific_name	Japanese_name	Cover
 46	2	herb	1976	1976-08	Stellaria fenzlii	シラオイハコベ	+
 46	2	herb	1976	1976-08	Dryopteris expansa	シラネワラビ	+
 46	2	herb	1976	1976-08	Tiarella polyphylla	ズダヤクシュ	+
-46	2	herb	1976	1976-08	Streptopus streptopoides subsp. japonicus	タケシマラン	+
+46	2	herb	1976	1976-08	Streptopus streptopoides subsp. streptopoides	ヒメタケシマラン	+
 46	2	herb	1976	1976-08	Cirsium kamtschaticum	チシマアザミ	1
 46	2	herb	1976	1976-08	Maianthemum dilatatum	マイヅルソウ	1
 46	2	herb	1976	1976-08	Chamerion angustifolium	ヤナギラン	+
@@ -13150,8 +13150,8 @@ Belt	Quadrat	Layer	Year	Date	Scientific_name	Japanese_name	Cover
 46	15	canopy	2002	2002-07-29	Betula platyphylla var. japonica	シラカンバ	5
 46	15	canopy	2002	2002-07-29	Salix udensis	オノエヤナギ	2
 46	15	canopy	2009	2009-07-31	Betula platyphylla var. japonica	シラカンバ	5
-46	15	canopy	2017	2017-08-07	Betula platyphylla var. japonica	シラカンバ	NA
-46	15	canopy	2017	2017-08-07	Abies sachalinensis	トドマツ	NA
+46	15	canopy	2017	2017-08-07	Betula platyphylla var. japonica	シラカンバ	5
+46	15	canopy	2017	2017-08-07	Abies sachalinensis	トドマツ	1
 46	15	subcanopy	1976	1976-08	Salix udensis	オノエヤナギ	1
 46	15	subcanopy	1980	1980-09	Salix caprea	バッコヤナギ	1
 46	15	subcanopy	2009	2009-07-31	Abies sachalinensis	トドマツ	1
@@ -13215,7 +13215,7 @@ Belt	Quadrat	Layer	Year	Date	Scientific_name	Japanese_name	Cover
 46	15	shrub	2002	2002-07-29	Rubus idaeus subsp. melanolasius	エゾイチゴ	+
 46	15	shrub	2009	2009-07-31	Sasa senanensis	クマイザサ	5
 46	15	shrub	2009	2009-07-31	Rubus idaeus subsp. melanolasius	エゾイチゴ	+
-46	15	shrub	2017	2017-08-07	Sasa senanensis	クマイザサ	NA
+46	15	shrub	2017	2017-08-07	Sasa senanensis	クマイザサ	5
 46	15	herb	1957	1957-09	Cornus canadensis	ゴゼンタチバナ	2
 46	15	herb	1957	1957-09	Carex sachalinensis var. iwakiana	ゴンゲンスゲ	+
 46	15	herb	1958	1958-08	Cornus canadensis	ゴゼンタチバナ	2
@@ -13295,7 +13295,7 @@ Belt	Quadrat	Layer	Year	Date	Scientific_name	Japanese_name	Cover
 46	15	herb	2009	2009-07-31	Maianthemum dilatatum	マイヅルソウ	+
 46	15	herb	2009	2009-07-31	Oxalis acetosella	コミヤマカタバミ	+
 46	15	herb	2009	2009-07-31	Cornus canadensis	ゴゼンタチバナ	+
-46	15	herb	2017	2017-08-07	Oxalis acetosella	コミヤマカタバミ	NA
+46	15	herb	2017	2017-08-07	Oxalis acetosella	コミヤマカタバミ	+
 46	15	moss	1976	1976-08	Moss	コケ類	+
 46	15	moss	1980	1980-09	Moss	コケ類	+
 46	15	moss	1984	1984-09	Moss	コケ類	+
