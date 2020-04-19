@@ -112,9 +112,9 @@ model {
   for (i in 1:N_obs) {
     int y = Obs_y[i];
     for (q in 1:N_q) {
-        real p = inv_logit(theta[y] + r[i, q]);
-        real alpha = p / delta - p;
-        real beta = (1 - p) * (1 - delta) / delta;
+        real mu = inv_logit(theta[y] + r[i, q]);
+        real alpha = mu / delta - mu;
+        real beta = (1 - mu) * (1 - delta) / delta;
 
         Y[i, q] ~ coverclass(CP, alpha, beta);
     }
@@ -131,9 +131,9 @@ generated quantities {
   for (i in 1:N_obs) {
     int y = Obs_y[i];
     for (q in 1:N_q) {
-      real p = inv_logit(theta[y] + r[i, q]);
-      real alpha = p / delta - p;
-      real beta = (1 - p) * (1 - delta) / delta;
+      real mu = inv_logit(theta[y] + r[i, q]);
+      real alpha = mu / delta - mu;
+      real beta = (1 - mu) * (1 - delta) / delta;
 
       yrep[i, q] = coverclass_rng(CP, N_cls, alpha, beta);
     }
