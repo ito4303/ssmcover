@@ -103,9 +103,9 @@ if (!file.exists(results_file) |
   
   fit_sim <- model$sample(data = stan_data,
                           seed = 1, refresh = 200, init = inits,
-                          num_chains = 4, num_cores = 4,
-                          num_samples = 1000, num_warmup = 1000, thin = 1,
-                          adapt_delta = 0.9, max_depth = 20)
+                          chains = 4, parallel_chains = 4,
+                          iter_sampling = 1000, iter_warmup = 1000, thin = 1,
+                          adapt_delta = 0.9, max_treedepth = 20)
   ###  Diagnose
   fit_sim$cmdstan_diagnose()
   
@@ -248,12 +248,12 @@ if (!file.exists(results_file) |
   #       setting seed=5 works.
   fit <- model$sample(data = stan_data,
                       seed = 1, init = inits,
-                      num_chains = 4, num_cores = 4,
+                      chains = 4, parallel_chains = 4,
                       refresh = 200, 
-                      num_samples = 2000, num_warmup = 2000, thin = 1,
+                      iter_sampling = 2000, iter_warmup = 2000, thin = 1,
 #                      refresh = 1,  # for test-run
-#                      num_samples = 20, num_warmup = 20, thin = 1,
-                      adapt_delta = 0.85, max_depth = 20)
+#                      iter_sampling = 20, iter_warmup = 20, thin = 1,
+                      adapt_delta = 0.85, max_treedepth = 20)
   ###  Diagnose
   fit$cmdstan_diagnose()
   
