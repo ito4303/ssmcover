@@ -1,7 +1,7 @@
 # ssmcover
-This repository contains code and data for the manuscript titled
+This repository contains code and data for the paper titled
 "State-space modeling of the dynamics of temporal plant cover using visually determined class data,"
-submitted to PeerJ.
+published in PeerJ 8:e9383 doi:<a href="https://doi.org/10.7717/peerj.9383">10.7717/peerj.9383</a>
 
 ## Files
 - ssmcover.R: R script for the model fitting.
